@@ -18,7 +18,7 @@ class UserApi extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'nama', 'email', 'password', 'nip',
+        'nama', 'email', 'password', 'nip', 'no_hp' ,'remember_token' ,'email_verified_at'
     ];
 
     /**

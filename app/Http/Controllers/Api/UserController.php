@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Image;
 use JWTAuth;
 use App\UserApi;
+use App\Password_reset;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -81,10 +82,11 @@ class UserController extends Controller
                 "code" => $code
             ];
         }else{
+            $checkUser = UserApi::where('username',$request->username)->get();
             $data = [
                 "response" => [
                     "status" => true,
-                    "data" => "",
+                    "data" => $checkUser,
                     "message" => "Berhasil Login",
                     "token" => $token,
                 ],
@@ -97,8 +99,10 @@ class UserController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'nip' => 'required|string|max:100',
+            'nama' => 'required|string|max:100',
+            'no_hp' => 'required|string|min:7',
+            'email' => 'required|string|email|max:150|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
         
@@ -114,9 +118,10 @@ class UserController extends Controller
         }else{
             $token = uniqid();
             $user = UserApi::create([
-                'nip' => $token,
+                'nip' => $request->get('nip'),
                 'nama' => $request->get('nama'),
                 'email' => $request->get('email'),
+                'no_hp' => $request->get('no_hp'),
                 'is_admin' => 0,
                 'remember_token' => $token,
                 'password' => Hash::make($request->get('password')),
@@ -159,11 +164,10 @@ class UserController extends Controller
 
     public function verfiyEmail($token)
     {
-       $verfiyEmail = UserApi::where('remember_token' , $token)->get();
+       $verfiyEmail = Password_reset::where('remember_token' , $token)->get();
        if (!$verfiyEmail->isEmpty()) {
            UserApi::where('remember_token', $token)
             ->update([
-                'status' => 1,
                 'email_verified_at' => date('Y-m-d H:i:s')
             ]);
             $data = [
@@ -237,7 +241,7 @@ class UserController extends Controller
         return response()->json($data['response'], $data['code']);
     }
 
-    public function changePassword(Request $request,$id)
+    public function changePassword(Request $request,$nip)
     {
         $validator = Validator::make($request->all(), [
             'old_password' => 'required|string|min:6',
@@ -254,11 +258,9 @@ class UserController extends Controller
                 "code" => 400
             ];
         }else{
-
-            $sqlCek = UserApi::select('password')->where('id' ,$id)->first();
-            if (password_verify($request->post('old_password'), $sqlCek->password)) {
-                    
-                $users = UserApi::where('id', $id)
+            $sqlCek = UserApi::select('password')->where('nip' ,$nip)->first();
+            if (password_verify($request->post('old_password'), $sqlCek->password)) { 
+                $users = UserApi::where('nip', $nip)
                 ->update([
                     'password' => Hash::make($request->post('password')),
                 ]);
@@ -304,19 +306,21 @@ class UserController extends Controller
         }else{
             $token = uniqid();
             $email = $request->email;
+           
             $users = UserApi::select('name')->where('email', $email)
             ->update([
                 'remember_token' => $token, 
             ]);
             if ($users > 0) {
-                $forgotEmail = [
-                    'name' => substr($email, 0, strpos($email, '@')),
-                    'email' => $email,
-                    'token' => $token,
-                    'subject' => 'Lupa Password Akun',
-                    'view' => 'send.forgot'
-                ];
-                $message =  MailInterface::sendMail($forgotEmail);
+                // $forgotEmail = [
+                //     'name' => substr($email, 0, strpos($email, '@')),
+                //     'email' => $email,
+                //     'token' => $token,
+                //     'subject' => 'Lupa Password Akun',
+                //     'view' => 'send.forgot'
+                // ];
+                // $message =  MailInterface::sendMail($forgotEmail);
+                $message = 'Check Your email';
             }else{
                 $message = 'Email Not Find';
             }
@@ -342,6 +346,10 @@ class UserController extends Controller
                 'remember_token' => $tokenNew,
                 'email_verified_at' => date('Y-m-d H:i:s')
             ]);
+            $insert = Password_reset::create([
+                'email' => $forgotEmail->email, 
+                'token' => $token,
+            ]);
             $data = [
                 'email' => $forgotEmail->email,
                 'remember_token' => $tokenNew
@@ -354,7 +362,7 @@ class UserController extends Controller
     }
     public function resetpassword(Request $request)
     {
-        $resetPassword = UserApi::select('email')->where(['remember_token' => $request->token,'email' => $request->email])->first();
+        $resetPassword = Password_reset::select('email')->where(['token' => $request->token,'email' => $request->email])->first();
         if ($resetPassword) {
             UserApi::where(['remember_token' => $request->token,'email' => $request->email])
             ->update([
