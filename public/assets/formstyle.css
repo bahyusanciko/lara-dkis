@@ -1,0 +1,60 @@
+body{
+		background-color: #142850;
+	}
+	.contact{
+		padding-top: 1%;
+		padding-left: 4%;
+		padding-bottom: 4%;
+		padding-right: 4%;
+		height: 400px;
+	}
+	.col-md-3{
+		background: #1f317f;
+		padding: 4%;
+		border-top-left-radius: 0.5rem;
+		border-bottom-left-radius: 0.5rem;
+		/* background-color:  ; */
+	}
+	.contact-info{
+		margin-top:10%;
+		color: #fff;
+	}
+	.contact-info img{
+		margin-bottom: 15%;
+	}
+	.contact-info h2{
+		margin-bottom: 10%;
+	}
+	.col-md-9{
+		background: #afcfeb;
+		padding: 3%;
+		border-top-right-radius: 0.5rem;
+		border-bottom-right-radius: 0.5rem;
+	}
+	.contact-form label{
+		font-weight:600;
+		color: #142850;
+	}
+	.contact-form button{
+		background: #142850;
+		color: #fff;
+		font-weight: 600;
+		width: 25%;
+	}
+	.contact-form button:focus{
+		box-shadow:none;
+	}
+
+	.row{
+		padding-top: 10px;
+		padding-bottom: 20px;
+	}
+
+	.btn-back{
+		border: none;
+	}
+
+	#laporanContent{
+        overflow:auto;
+        height: 500px;
+      }
