@@ -46,7 +46,7 @@ class UserController extends Controller
     public function authenticate(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email|max:255',
+            'nip' => 'required|string:50',
             'password' => 'required|string|min:6',
         ]);
         
@@ -55,22 +55,29 @@ class UserController extends Controller
             $code = 400;
             $error = true;
         }
+        $getUser = UserApi::where('nip',$request->nip)->first();
+        // dd($getUser);
 
-        $credentials = $request->only('email', 'password');
-
-        try {
-            if (!$token = JWTAuth::attempt($credentials)) {
-                $message = 'Username & Password Is Wrong';
+        if ($getUser) {
+            if (password_verify($request->password, $getUser['password'])) {
+                try {
+                    $token = JWTAuth::fromUser($getUser);
+                    $error = false;
+                } catch (JWTException $e) {
+                    $message = 'could_not_create_token';
+                    $code = 400;
+                    $error = true;
+                }
+            }else{
+                $message = 'Password Salah';
                 $code = 400;
                 $error = true;
-            }else{
-                $error = false;
             }
-        } catch (JWTException $e) {
-            $message = 'could_not_create_token';
+        }else{
+            $message = 'Usernmae Salah';
             $code = 400;
             $error = true;
-        }
+        }        
 
         if ($error) {
             $data = [
@@ -82,11 +89,10 @@ class UserController extends Controller
                 "code" => $code
             ];
         }else{
-            $checkUser = UserApi::where('username',$request->username)->get();
             $data = [
                 "response" => [
                     "status" => true,
-                    "data" => $checkUser,
+                    "data" => $getUser,
                     "message" => "Berhasil Login",
                     "token" => $token,
                 ],
