@@ -211,7 +211,7 @@ class UserController extends Controller
                 "code" => 400
             ];
         }else{
-            $users = UserApi::where('id', $request->id)
+            $users = UserApi::where('nip', $request->id)
             ->update([
                 'nama' => $request->name,
                 'no_hp' => $request->phone_number
