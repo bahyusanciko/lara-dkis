@@ -20,7 +20,7 @@ class HomeController extends Controller
     public function view_lupa_password()
     {
         $value = Auth::user();
-        $jApk = Auth::user()->aplikasi;
+        $jApk = Auth::user()->Aplikasi;
         return view('lupapassword',['val' => $value, 'apks' => $jApk]);
     }
 
