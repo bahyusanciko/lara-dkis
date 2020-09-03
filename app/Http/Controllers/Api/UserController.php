@@ -56,8 +56,6 @@ class UserController extends Controller
             $error = true;
         }
         $getUser = UserApi::where('nip',$request->nip)->first();
-        // dd($getUser);
-
         if ($getUser) {
             if (password_verify($request->password, $getUser['password'])) {
                 try {
@@ -105,7 +103,7 @@ class UserController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nip' => 'required|string|max:100',
+            'nip' => 'required|string|max:100|unique:users',
             'nama' => 'required|string|max:100',
             'no_hp' => 'required|string|min:7',
             'email' => 'required|string|email|max:150|unique:users',
