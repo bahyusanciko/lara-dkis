@@ -105,7 +105,6 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'nip' => 'required|string|max:100|unique:users',
             'nama' => 'required|string|max:100',
-            'no_hp' => 'required|string|min:7',
             'email' => 'required|string|email|max:150|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
