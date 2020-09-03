@@ -211,20 +211,6 @@ class UserController extends Controller
                 "code" => 400
             ];
         }else{
-            $image = $request->file('img');
-            if ($image) {
-                $imageName = uniqid().date('Y-m-d-H:i:s').".".$image->extension();
-                $destinationPath = public_path('/thumbnail');
-                $img = Image::make($image->path());
-                $img->resize(100, 100, function ($constraint) {
-                    $constraint->aspectRatio();
-                })->save($destinationPath.'/'.$imageName);
-        
-                $destinationPath = public_path('/image/profile');
-                $image->move($destinationPath, $imageName);
-            }else{
-                $imageName = null;
-            }
             $users = UserApi::where('id', $request->id)
             ->update([
                 'img' => $imageName, 
