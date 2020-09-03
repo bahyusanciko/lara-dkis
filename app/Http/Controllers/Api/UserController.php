@@ -213,7 +213,6 @@ class UserController extends Controller
         }else{
             $users = UserApi::where('id', $request->id)
             ->update([
-                'img' => $imageName, 
                 'nama' => $request->name,
                 'no_hp' => $request->phone_number
             ]);
