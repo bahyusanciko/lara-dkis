@@ -206,7 +206,7 @@ class UserController extends Controller
                 "response" => [
                     "status" => false,
                     "data" => null,
-                    "message" => $message,
+                    "message" => $message
                 ],
                 "code" => 400
             ];
