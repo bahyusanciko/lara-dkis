@@ -31,5 +31,24 @@ use Illuminate\Support\Facades\Route;
         Route::post('users', 'Api\UserController@updateProfile');
         Route::put('users/{id}', 'Api\UserController@changePassword');
         Route::get('users/{name}', 'Api\UserController@show');
-        
+
+        Route::get('getlistapps', 'Api\ActivityController@getListApps');
+
+        Route::post('lupa-password', 'Api\ActivityController@LupaPassword');
+        Route::post('laporan-jaringan', 'Api\ActivityController@LaporJaringan');
+        Route::post('layanan-email', 'Api\ActivityController@email');
+        Route::post('layanan-aplikasi', 'Api\ActivityController@aplikasi');
+        Route::post('layanan-cloud', 'Api\ActivityController@akun_cloud');
+        Route::post('layanan-lpse', 'Api\ActivityController@LPSE');
+        Route::post('layanan-subdomain', 'Api\ActivityController@SubDomain');
+
+        Route::get('status-laporan/{id}','Api\LaporanController@index_user');
+        Route::get('status-laporan/lpse','Api\LaporanController@stat_lpse_user');
+        Route::get('status-laporan/subdomain','Api\LaporanController@stat_subdomain_user');
+        Route::get('status-laporan/akun-cloud','Api\LaporanController@stat_akun_cloud_user');
+        Route::get('status-laporan/jaringan','Api\LaporanController@stat_jaringan_user');
+        Route::get('status-laporan/email','Api\LaporanController@stat_email_user');
+        Route::get('status-laporan/aplikasi','Api\LaporanController@stat_aplikasi_user');
+        Route::get('status-laporan/lupa-password','Api\LaporanController@stat_lupa_password_user');
+
     });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Aplikasi;
 
 class HomeController extends Controller
 {
@@ -20,7 +21,7 @@ class HomeController extends Controller
     public function view_lupa_password()
     {
         $value = Auth::user();
-        $jApk = Auth::user()->Aplikasi;
+        $jApk = Aplikasi::all();
         return view('lupapassword',['val' => $value, 'apks' => $jApk]);
     }
 
