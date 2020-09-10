@@ -216,15 +216,18 @@ class LaporanController extends Controller
     function index_user($id)
     {
         $laporans = DB::table('laporan')->where('nip',$id)->get();
-        $cLaporans[0] = DB::table('laporan')->where([['status', '=', 'Terkirim'],['nip', '=', $id]])->count();
-        $cLaporans[1] = DB::table('laporan')->where([['status', '=', 'Dalam Proses'],['nip', '=', $id]])->count();
-        $cLaporans[2] = DB::table('laporan')->where([['status', '=', 'Selesai'],['nip', '=', $id]])->count();
-        $cLaporans[3] = DB::table('laporan')->where([['status', '=', 'Selesai'],['nip', '=', $id]])->count();
-        $cLaporans[4] = DB::table('laporan')->where('nip',$id)->count();
+        $status = ['Terkirim', 'Dalam Proses', 'Selesai','Tertolak' ];
+        foreach ($status as $key => $value) {
+            $cLaporans[] = [
+                'value' => $value,
+                'count' => DB::table('laporan')->where([['status', '=', $value],['nip', '=', $id]])->count()
+            ];
+        }
+        $totalLaporan = DB::table('laporan')->where('nip',$id)->count();
         $data = [
             "response" => [
                 "status" => true,
-                "data" => ['laporans'=>$laporans,'cLaporans'=>$cLaporans],
+                "data" => ['laporans'=>$laporans,'cLaporans'=>$cLaporans] ,'totalLaporan' => $totalLaporan,
                 "message" => "Data Users",
             ],
             "code" => 200

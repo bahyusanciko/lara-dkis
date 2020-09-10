@@ -426,7 +426,7 @@ class ActivityController extends Controller
             "response" => [
                     "status" => true,
                     "data" => $id,
-                    "message" => "Berhasil Melakukan Pengajuan LPSE",
+                    "message" => "Berhasil Melakukan Pengajuan Subdomain",
                 ],
                 "code" => 201
             ];

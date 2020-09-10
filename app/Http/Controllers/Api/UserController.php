@@ -129,19 +129,19 @@ class UserController extends Controller
                 'remember_token' => $token,
                 'password' => Hash::make($request->get('password')),
             ]);
-            // $VerfiyEmail = [
-            //     'name' => $user->name,
-            //     'email' => $user->email,
-            //     'token' => $user->remember_token,
-            //     'subject' => 'Verfikasi Akun',
-            //     'view' => 'send.verify'
-            // ];
-            // $message =  MailInterface::sendMail($VerfiyEmail);
+            $VerfiyEmail = [
+                'name' => $user->name,
+                'email' => $user->email,
+                'token' => $user->remember_token,
+                'subject' => 'Verfikasi Akun',
+                'view' => 'send.verify'
+            ];
+            $message =  MailInterface::sendMail($VerfiyEmail);
             $data = [
                 "response" => [
                     "status" => true,
                     "data" => $user,
-                    "message" => "Berhasil Membuat Akun",
+                    "message" => $message,
                 ],
                 "code" => 201
             ];
@@ -167,7 +167,7 @@ class UserController extends Controller
 
     public function verfiyEmail($token)
     {
-       $verfiyEmail = Password_reset::where('remember_token' , $token)->get();
+       $verfiyEmail = UserApi::where('remember_token' , $token)->get();
        if (!$verfiyEmail->isEmpty()) {
            UserApi::where('remember_token', $token)
             ->update([
@@ -177,7 +177,7 @@ class UserController extends Controller
                 "response" => [
                     "status" => true,
                     "data" => null,
-                    "message" => "Account Verfiy Success"
+                    "message" => "Account Verfiy Success Silahkan Lgoin"
                 ],
                 "code" => 200
             ];
