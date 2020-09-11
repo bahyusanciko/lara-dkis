@@ -232,7 +232,6 @@ class LaporanController extends Controller
             ],
             "code" => 200
         ];
-
         return response()->json($data['response'], $data['code']);
     }
 
